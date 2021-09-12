@@ -22,16 +22,19 @@ export const createName = (absPath: string): string => {
     return candidate
 }
 
-const TEMPLATES_PATH = `${process.cwd()}/src/templates/**/*.{js,jsx,ts,tsx}`
 
-export const collectTemplates = (pattern: string = TEMPLATES_PATH): StringMap => {
-    const existing = cache.loadJSON(TEMPLATES_PATH)
+export const collectTemplates = (baseDir: string): StringMap => {
+    console.log(`collect templates says baseDir`, baseDir)
+    const pattern = path.join(baseDir, `src/templates/**/*.{js,jsx,ts,tsx}`)
+    console.log('collect templates searches', pattern)
+    const existing = cache.loadJSON(pattern)
     if (existing) {
         return existing
     }
     const nameToPath: StringMap = {}
     
     const result = glob.sync(pattern, { absolute: true });
+    console.log(`result is `, result)
     result.filter((absPath: string) => (
         !absPath.match(/\.props\.(js|ts)$/)) &&
         !absPath.match(/\/props\.(js|ts)$/)
@@ -40,15 +43,16 @@ export const collectTemplates = (pattern: string = TEMPLATES_PATH): StringMap =>
             nameToPath[createName(absPath)] = absPath
         })
 
-    cache.saveJSON(TEMPLATES_PATH, nameToPath)
+    cache.saveJSON(pattern, nameToPath)
     
     return nameToPath
 };
 
-const QUERIES_PATH = `${process.cwd()}/src/**/*.graphql`
 
-export const collectQueries = (pattern: string = QUERIES_PATH): StringMap => {
-    const existing = cache.loadJSON(QUERIES_PATH)
+export const collectQueries = (baseDir: string): StringMap => {
+    const pattern = path.join(baseDir, `src/**/*.graphql`)
+
+    const existing = cache.loadJSON(pattern)
     
     if (existing) {
         return existing
@@ -64,18 +68,19 @@ export const collectQueries = (pattern: string = QUERIES_PATH): StringMap => {
         }
     }
 
-    cache.saveJSON(QUERIES_PATH, nameToPath)
+    cache.saveJSON(pattern, nameToPath)
 
     return nameToPath
 };
 
-const PROPS_PATHS = [
-    `${process.cwd()}/src/**/*.props.{js,ts}`,
-    `${process.cwd()}/src/**/props.{js,ts}`,
-]
 
-export const collectGetProps = (patterns: Array<string> = PROPS_PATHS): StringMap => {
-    const key = JSON.stringify(PROPS_PATHS)
+export const collectGetProps = (baseDir: string): StringMap => {
+    const patterns = [
+        path.join(baseDir, `src/**/*.props.{js,ts}`),
+        path.join(baseDir, `src/**/props.{js,ts}`),
+    ]
+    
+    const key = JSON.stringify(patterns)
     const existing = cache.loadJSON(key)
     
     if (existing) {
@@ -91,7 +96,7 @@ export const collectGetProps = (patterns: Array<string> = PROPS_PATHS): StringMa
         ] 
     })
     for (const absPath of results) {
-        const rel = path.relative(`${process.cwd()}/src`, absPath)
+        const rel = path.relative(path.join(baseDir, `src`), absPath)
         if (!rel.startsWith(`fragments`)) {
             nameToPath[createName(absPath)] = absPath
         }
@@ -103,8 +108,8 @@ export const collectGetProps = (patterns: Array<string> = PROPS_PATHS): StringMa
 };
 
 
-export const collectElementalBlocks = (baseDir: string): StringMap => {
-    const pattern = `${process.cwd()}/src/${baseDir}/**/*.{js,jsx,ts,tsx}`
+export const collectElementalBlocks = (baseDir: string, elementalDir: string): StringMap => {
+    const pattern = path.join(baseDir, `src/${elementalDir}/**/*.{js,jsx,ts,tsx}`)
     const existing = cache.loadJSON(pattern)
     if (existing) {
         return existing

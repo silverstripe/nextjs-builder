@@ -8,7 +8,7 @@ export default async (ssConfig: ProjectConfig): Promise<void> => {
         return Promise.resolve()
     }
     const dir = ssConfig.elemental.componentsPath ?? `components/elements`    
-    const availableBlocks = collectElementalBlocks(dir)
+    const availableBlocks = collectElementalBlocks(ssConfig.baseDir, dir)
     const output = [`/** GENERTATED CODE -- DO NOT MODIFY **/`]        
     output.push(`import dynamic from "next/dynamic"`)
 

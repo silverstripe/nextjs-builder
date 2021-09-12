@@ -5,11 +5,11 @@ import createGetQueryForType from "../build/createGetQueryForType"
 import createBulkQuery from "../build/createBulkQuery"
 import { getQueryName, hasTopLevelField } from "@silverstripe/nextjs-toolkit"
 import { parse } from "graphql"
-import { linkify, requireProject } from "@silverstripe/nextjs-toolkit"
+import { linkify } from "@silverstripe/nextjs-toolkit"
 import createClient from "../graphql/createClient"
+import { ProjectState } from "@silverstripe/nextjs-toolkit"
 
-export const getStaticPaths: GetStaticPaths = async () => {
-  const project = requireProject()
+export const getStaticPaths = (project: ProjectState): GetStaticPaths => async () => {
   const api = createClient(project.projectConfig)
   const staticPayloadResult: CoreQueries =
     (await api.query(STATIC_PAYLOAD_QUERY)) ?? null

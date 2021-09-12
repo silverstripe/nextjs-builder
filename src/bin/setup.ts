@@ -7,9 +7,9 @@ import path from "path"
 import { writeFileSync, readFileSync } from "fs"
 // @ts-ignore
 import crypto from "crypto-browserify"
-import getProjectDir from "../utils/getProjectDir"
+import { ProjectConfig } from "@silverstripe/nextjs-toolkit"
 
-export const setup = () => {
+export const setup = (ssConfig: ProjectConfig) => {
   console.log(`
   This tool helps you get your NextJS project connected to a Silverstripe CMS 
   data source. You'll need to provide the URL to your Silverstripe installation
@@ -21,10 +21,7 @@ export const setup = () => {
   Ready? Let's do it! 🎉
 `)
 
-  const projectDir = getProjectDir()
-  if (!projectDir) {
-    throw new Error(`Could not find project in ${__dirname}`)
-  }
+  const projectDir = ssConfig.baseDir
 
   const previewKey = crypto.randomBytes(256).toString(`base64`).substring(0, 64)
 

@@ -12,7 +12,7 @@ import bootProjectConfig from "../utils/bootProjectConfig"
       import("./scaffoldPages").then(i => i.scaffoldPages(ssConfig)),
     "scaffold-blocks": () =>
       import("./scaffoldBlocks").then(i => i.scaffoldBlocks(ssConfig)),
-    "setup": () => import("./setup").then(i => i.setup()),
+    "setup": () => import("./setup").then(i => i.setup(ssConfig)),
   }
 
   const command = commands[process.argv[2]] ?? null

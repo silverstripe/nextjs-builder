@@ -5,7 +5,7 @@ import createClient from "../graphql/createClient"
 
 export default async (ssConfig: ProjectConfig): Promise<void> => {
     // Extract static queries, and put them in the cache
-    const queries = extractStaticQueries(`${process.cwd()}/src/**/*.{js,jsx,ts,tsx}`)
+    const queries = extractStaticQueries(ssConfig.baseDir)
     if (queries.length > 0) {
         console.log(`Static queries extracted: ${queries.length}`)
     }

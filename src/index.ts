@@ -12,3 +12,4 @@ export { default as cacheTypeAncestry } from "./prebuild/cacheTypeAncestry"
 export { default as createCacheManifest } from "./prebuild/createCacheManifest"
 
 export { default as bootProjectConfig } from "./utils/bootProjectConfig"
+export { default as getProjectDir } from "./utils/getProjectDir"

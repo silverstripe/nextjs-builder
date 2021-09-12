@@ -4,7 +4,6 @@ import path from "path"
 import fs from "fs"
 import createClient from "../graphql/createClient"
 import getLibraryDir from "../utils/getLibraryDir"
-import getProjectDir from "../utils/getProjectDir"
 import { ProjectConfig } from "@silverstripe/nextjs-toolkit"
 
 interface FragmentResult {
@@ -30,12 +29,9 @@ const libraryDir = getLibraryDir()
 if (!libraryDir) {
   throw new Error(`Could not find package dir at ${__dirname}`)
 }
-const projectDir = getProjectDir()
-if (!projectDir) {
-  throw new Error(`Could not find project dir at ${__dirname}`)
-}
 
 export const scaffoldBlocks = (ssConfig: ProjectConfig) => {
+  const projectDir = ssConfig.baseDir
   const elementalFragmentPath =
     ssConfig.elemental?.fragmentsPath ?? `fragments/elemental/elements`
   const elementalComponentsPath =

@@ -36,11 +36,11 @@
     "react-dom": "^17.0.2",
     "gql-compress": "^2.0.24",
     "glob": "^7.1.7",
-    "crypto-browserify": "^3.12.0",
-    "@silverstripe/nextjs-toolkit": "*"
+    "crypto-browserify": "^3.12.0"
   },
   "peerDependencies": {
-    "next": "^11.0"
+    "next": "^11.0",
+    "@silverstripe/nextjs-toolkit": "*"    
   },
   "devDependencies": {
     "@types/node-fetch": "^2.5.12",    

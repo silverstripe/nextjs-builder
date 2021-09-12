@@ -5,7 +5,6 @@ import fs from "fs"
 import { ProjectConfig } from "@silverstripe/nextjs-toolkit"
 import createClient from "../graphql/createClient"
 import getLibraryDir from "../utils/getLibraryDir"
-import getProjectDir from "../utils/getProjectDir"
 import glob from "glob"
 
 interface FragmentResult {
@@ -30,16 +29,13 @@ const libraryDir = getLibraryDir()
 if (!libraryDir) {
   throw new Error(`Could not find package dir at ${__dirname}`)
 }
-const projectDir = getProjectDir()
-if (!projectDir) {
-  throw new Error(`Could not find project dir at ${__dirname}`)
-}
 
 const templatePath = (name: string) => (
   path.join(libraryDir, `src/server/templates/${name}.template`)
 )
 
 export const scaffoldPages = (ssConfig: ProjectConfig) => {
+  const projectDir = ssConfig.baseDir
   const ignore = ssConfig.page?.ignore ?? []
   const absComponentsPath = path.resolve(projectDir, `src/templates`)
   

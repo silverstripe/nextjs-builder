@@ -1,9 +1,10 @@
 import { collectTemplates } from "../build/collectors"
 import { relative } from "path"
 import cache from "../cache/cache"
+import { ProjectConfig } from "@silverstripe/nextjs-toolkit"
 
-export default async (): Promise<void> => {
-    const availableTemplates = collectTemplates()
+export default async (ssConfig: ProjectConfig): Promise<void> => {
+    const availableTemplates = collectTemplates(ssConfig.baseDir)
     const output = [`/** GENERTATED CODE -- DO NOT MODIFY **/`]        
     output.push(`import dynamic from "next/dynamic"`)
 

@@ -27,7 +27,11 @@ const bootProjectConfig = (): ProjectConfig => {
   const cachePath = path.join(projectDir, `.cache`)
   cache.init(cachePath)
 
-  return eval(jsSource.outputText)
+  const ssConfig = eval(jsSource.outputText)
+  ssConfig.baseDir = projectDir
+  console.log(`boot project sets dir to `, projectDir)
+
+  return ssConfig
 
 }
 export default bootProjectConfig

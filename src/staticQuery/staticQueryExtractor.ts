@@ -8,7 +8,6 @@ import { CallExpression, Identifier, ImportDeclaration } from "@babel/types"
 import { PARSER_OPTIONS } from "../babel/parser-options"
 import { parse as graphqlParse } from "graphql"
 
-const TARGET_LIBRARY = `${process.cwd()}/lib/staticQuery/useStaticQuery`
 
 export const extractStaticQuery = (absPath: string): string | null => {
   let ast: any;
@@ -17,10 +16,7 @@ export const extractStaticQuery = (absPath: string): string | null => {
     ast = parse(contents, PARSER_OPTIONS)
   } catch (e: any) {
     throw new Error(`Cound not parse file ${absPath} for static query extraction: ${e.message}`)
-  }
-
-  const dir = path.dirname(absPath)
-  
+  }   
 
   let functionName: string | null = null
   let query: string | null = null
@@ -29,13 +25,21 @@ export const extractStaticQuery = (absPath: string): string | null => {
     // Find any import that references useStaticQuery module
     ImportDeclaration({ node }: { node: ImportDeclaration }) {
       const libraryPath = node.source.value
-      const resolvedPath = path.resolve(dir, libraryPath)
-
-      const candidate = resolvedPath.replace(/\.[^/.]+$/, '')
-      if (candidate !== TARGET_LIBRARY) {
+      if (libraryPath !== `@silverstripe/nextjs-toolkit`) {
         return
       }
-      functionName = node.specifiers[0]?.local?.name        
+
+      node.specifiers.some(specifier => {
+        if (
+          specifier.type === `ImportSpecifier` &&
+          specifier.imported.type === `Identifier` &&
+          specifier.imported.name === `useStaticQuery`
+        ) {
+          functionName = specifier.local.name
+          return true
+        }
+        return false
+      })
       traverse(ast, {
         // Find any calls that use the imported useStaticQuery function
         CallExpression({ node }: { node: CallExpression }) {   
@@ -93,7 +97,8 @@ export const extractStaticQuery = (absPath: string): string | null => {
   return query
 }
 
-export const extractStaticQueries = (pattern: string) => {
+export const extractStaticQueries = (baseDir: string) => {
+  const pattern = path.join(baseDir, `src/**/*.{js,jsx,ts,tsx}`)
   const files = glob.sync(pattern, { absolute: true });
   return files.reduce((queries: Array<string>, absPath) => {
     const query = extractStaticQuery(absPath)

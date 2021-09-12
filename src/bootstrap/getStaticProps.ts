@@ -3,15 +3,14 @@ import { CoreQueries } from "../../types"
 import { collectTemplates } from "../build/collectors"
 import {
   resolveAncestry,
-  requireProject,
   linkify,
 } from "@silverstripe/nextjs-toolkit"
 import { TYPE_RESOLUTION_QUERY } from "../build/queries"
 import createGetQueryForType from "../build/createGetQueryForType"
 import createClient from "../graphql/createClient"
+import { ProjectState } from "@silverstripe/nextjs-toolkit"
 
-const getStaticProps: GetStaticProps = async props => {
-  const project = requireProject()
+const getStaticProps = (project: ProjectState): GetStaticProps => async props => {
   const getQueryForType = createGetQueryForType(project)
   const api = createClient(project.projectConfig)
   const { getPropsManifest, typeAncestry } = project.cacheManifest
@@ -31,8 +30,8 @@ const getStaticProps: GetStaticProps = async props => {
       notFound: true,
     }
   }
-  const templates = Object.keys(collectTemplates())
-
+  const templates = Object.keys(collectTemplates(project.projectConfig.baseDir))
+  console.log(templates, templates)
   const typeResolutionResult: CoreQueries = await api.query(
     TYPE_RESOLUTION_QUERY,
     { links: [url] }
