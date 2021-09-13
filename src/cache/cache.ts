@@ -2,11 +2,12 @@
 import Cache from "file-system-cache"
 import fs from "fs"
 import path from "path"
+import getProjectDir from "../utils/getProjectDir"
 
-let cacheDir = path.resolve(`${__dirname}../../.cache`)
+let cacheDir = path.join(getProjectDir() ?? ``, `.cache`)
 
 let inst = Cache({
-    basePath: `${process.cwd()}/${cacheDir}`,
+    basePath: cacheDir,
 })
 
 const init = (dir: string) => {

@@ -17,6 +17,7 @@ export default async (ssConfig: ProjectConfig): Promise<void> => {
     `
     return api.query(BUILD_QUERY)
         .then(({ staticBuild: { typeAncestry } }) => {
+            console.log(typeAncestry)
             const ancestryMap: { [key: string]: Array<string> } = {}
             typeAncestry.forEach((result: { type: string, ancestry: Array<string> }) => {
                 ancestryMap[result.type] = result.ancestry

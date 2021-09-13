@@ -12,6 +12,7 @@ import createCacheManifest from "../prebuild/createCacheManifest"
 import { glob } from "glob"
 import getProjectDir from "../utils/getProjectDir"
 import path from "path"
+import cache from "../cache/cache"
 
 export const buildManifest = (ssConfig: ProjectConfig): Promise<void> => {
 
@@ -28,6 +29,12 @@ export const buildManifest = (ssConfig: ProjectConfig): Promise<void> => {
   }
 
   const projectDir = getProjectDir()
+  if (!projectDir) {
+    throw new Error(`Could not find project dir at ${__dirname}`)
+  }
+
+  cache.init(path.join(projectDir, `.cache`))
+  cache.clear()
   
   if (projectDir) {
     glob.sync(path.join(projectDir, `prebuild/*.{js,ts}`), { absolute: true}).forEach(file => {

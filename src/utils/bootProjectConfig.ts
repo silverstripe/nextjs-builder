@@ -29,7 +29,6 @@ const bootProjectConfig = (): ProjectConfig => {
 
   const ssConfig = eval(jsSource.outputText)
   ssConfig.baseDir = projectDir
-  console.log(`boot project sets dir to `, projectDir)
 
   return ssConfig
 

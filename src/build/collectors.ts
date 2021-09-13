@@ -24,9 +24,7 @@ export const createName = (absPath: string): string => {
 
 
 export const collectTemplates = (baseDir: string): StringMap => {
-    console.log(`collect templates says baseDir`, baseDir)
     const pattern = path.join(baseDir, `src/templates/**/*.{js,jsx,ts,tsx}`)
-    console.log('collect templates searches', pattern)
     const existing = cache.loadJSON(pattern)
     if (existing) {
         return existing
@@ -34,7 +32,6 @@ export const collectTemplates = (baseDir: string): StringMap => {
     const nameToPath: StringMap = {}
     
     const result = glob.sync(pattern, { absolute: true });
-    console.log(`result is `, result)
     result.filter((absPath: string) => (
         !absPath.match(/\.props\.(js|ts)$/)) &&
         !absPath.match(/\/props\.(js|ts)$/)

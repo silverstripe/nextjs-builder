@@ -32,23 +32,10 @@ const createClient = (projectConfig: ProjectConfig) => {
 
   const query = async (query: string, variables: Variables = {}) => {
     const cacheKey = getCacheKey(query, variables)
-    let stats
-    try {
-      stats = JSON.parse(cache.readFile(`.queryStats`))
-    } catch (e) {
-      stats = { hit: 0, miss: 0 }
-    }
-
     if (cacheKey) {
       const cached = cache.load(cacheKey!)
       if (cached) {
-        stats.hit++
-        cache.writeFile(`.queryStats`, JSON.stringify(stats))
-
         return cached
-      } else {
-        stats.miss++
-        cache.writeFile(`.queryStats`, JSON.stringify(stats))
       }
     }
 
