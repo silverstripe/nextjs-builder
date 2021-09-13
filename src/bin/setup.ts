@@ -22,7 +22,7 @@ export const setup = (ssConfig: ProjectConfig) => {
 `)
 
   // Shim the base URL so it doesn't throw whilst setting up the base URL
-  process.env.SS_BASE_URL = `http://example.com`
+  process.env.SILVERSTRIPE_BASE_URL = `http://example.com`
 
   const projectDir = ssConfig.baseDir
 
