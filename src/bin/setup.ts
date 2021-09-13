@@ -21,6 +21,9 @@ export const setup = (ssConfig: ProjectConfig) => {
   Ready? Let's do it! 🎉
 `)
 
+  // Shim the base URL so it doesn't throw whilst setting up the base URL
+  process.env.SS_BASE_URL = `http://example.com`
+
   const projectDir = ssConfig.baseDir
 
   const previewKey = crypto.randomBytes(256).toString(`base64`).substring(0, 64)
