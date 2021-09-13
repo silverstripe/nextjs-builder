@@ -3,8 +3,6 @@
 import bootProjectConfig from "../utils/bootProjectConfig"
 
 ;(async () => {
-  const ssConfig = bootProjectConfig()
-
   const commands: { [command: string]: () => Promise<any> } = {
     "build-manifest": () =>
       import("./buildManifest").then(i => i.buildManifest(ssConfig)),
@@ -12,10 +10,19 @@ import bootProjectConfig from "../utils/bootProjectConfig"
       import("./scaffoldPages").then(i => i.scaffoldPages(ssConfig)),
     "scaffold-blocks": () =>
       import("./scaffoldBlocks").then(i => i.scaffoldBlocks(ssConfig)),
-    "setup": () => import("./setup").then(i => i.setup(ssConfig)),
+    "setup": () => import("./setup").then(i => {
+      i.setup(ssConfig)
+    }),
+  }
+  const commandName = process.argv[2]
+  const command = commands[commandName] ?? null
+
+  if (commandName === `setup`) {
+    // Shim the setup with a fake baseURL so it doesn't fail when setting up the baseURL.
+    process.env.SILVERSTRIPE_BASE_URL = `http://example.com`
   }
 
-  const command = commands[process.argv[2]] ?? null
+  const ssConfig = bootProjectConfig()
 
   if (!command) {
     console.log(`
