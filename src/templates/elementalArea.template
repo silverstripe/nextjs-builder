@@ -1,5 +1,5 @@
-import cache from "../../../.cache"
-import { BaseElementInterfaceConnection } from "../../../graphql"
+import cache from "cache"
+import { BaseElementInterfaceConnection } from "ss-schema"
 
 
 interface Props {

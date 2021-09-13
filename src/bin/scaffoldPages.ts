@@ -31,13 +31,13 @@ if (!libraryDir) {
 }
 
 const templatePath = (name: string) => (
-  path.join(libraryDir, `src/server/templates/${name}.template`)
+  path.join(libraryDir, `src/templates/${name}.template`)
 )
 
 export const scaffoldPages = (ssConfig: ProjectConfig) => {
   const projectDir = ssConfig.baseDir
   const ignore = ssConfig.page?.ignore ?? []
-  const absComponentsPath = path.resolve(projectDir, `src/templates`)
+  const absComponentsPath = path.join(projectDir, `src/templates`)
   
   let elementalAreaPath: string
   if (ssConfig.elemental.enabled) {

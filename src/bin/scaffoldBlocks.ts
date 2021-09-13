@@ -69,11 +69,6 @@ export const scaffoldBlocks = (ssConfig: ProjectConfig) => {
     encoding: `utf8`,
   })
 
-  const schemaPath = path.relative(
-    absElementalComponentsPath,
-    `${projectDir}/graphql.ts`
-  )
-
   const api = createClient(ssConfig)
 
   api.queryUncached(query, variables).then(result => {
@@ -108,7 +103,6 @@ export const scaffoldBlocks = (ssConfig: ProjectConfig) => {
       // If no component exists for this block, create it
       if (!isBase && !fs.existsSync(componentPath)) {
         const code = componentTemplateContents
-          .replace(/<%schemaPath%>/g, schemaPath.replace(/\.ts$/, ``))
           .replace(/<%typeName%>/g, result.type)
         fs.writeFileSync(componentPath, code)
 

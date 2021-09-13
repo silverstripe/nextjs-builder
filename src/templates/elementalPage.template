@@ -1,7 +1,7 @@
 import React from "react"
-import PageLayout from "../../layouts/PageLayout"
+import PageLayout from "layouts/PageLayout"
 import ElementalArea from "<%elementalAreaPath%>"
-import { PageProps } from "../../../types"
+import { PageProps } from "types"
 
 const Page: React.FC<PageProps> = ({ query: { <%queryName%> }}) => {
     const elements = <%queryName%>?.elementalArea?.elements.nodes ?? []
