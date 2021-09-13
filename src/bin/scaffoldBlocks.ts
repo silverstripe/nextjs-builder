@@ -60,7 +60,7 @@ export const scaffoldBlocks = (ssConfig: ProjectConfig) => {
 
   const componentTemplatePath = path.join(
     libraryDir,
-    `src/server/templates/block.template`
+    `templates/block.template`
   )
   if (!fs.existsSync(componentTemplatePath)) {
     throw new Error(`Template ${componentTemplatePath} does not exist`)

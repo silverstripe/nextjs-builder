@@ -31,7 +31,7 @@ if (!libraryDir) {
 }
 
 const templatePath = (name: string) => (
-  path.join(libraryDir, `src/templates/${name}.template`)
+  path.join(libraryDir, `templates/${name}.template`)
 )
 
 export const scaffoldPages = (ssConfig: ProjectConfig) => {
