@@ -31,7 +31,6 @@ const getStaticProps = (project: ProjectState): GetStaticProps => async props =>
     }
   }
   const templates = Object.keys(collectTemplates(project.projectConfig.baseDir))
-  console.log(templates, templates)
   const typeResolutionResult: CoreQueries = await api.query(
     TYPE_RESOLUTION_QUERY,
     { links: [url] }
