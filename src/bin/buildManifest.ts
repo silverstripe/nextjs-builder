@@ -24,7 +24,7 @@ export const buildManifest = (ssConfig: ProjectConfig): Promise<void> => {
     cacheGetProps,
   ]
 
-  if (ssConfig.elemental.enabled) {
+  if (ssConfig.elemental) {
     preBuildSteps.push(cacheElementalBlocks)
   }
 

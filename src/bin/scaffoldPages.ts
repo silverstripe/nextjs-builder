@@ -2,7 +2,7 @@
 
 import path from "path"
 import fs from "fs"
-import { ProjectConfig } from "@silverstripe/nextjs-toolkit"
+import { ProjectConfig, getFragmentFields } from "@silverstripe/nextjs-toolkit"
 import createClient from "../graphql/createClient"
 import getLibraryDir from "../utils/getLibraryDir"
 import glob from "glob"
@@ -24,6 +24,7 @@ query PageFragments($baseClass: String!, $baseFields: [String!]) {
 const variables = {
   baseClass: "Page",
   includeBase: true,
+  maxNesting: 2,
 }
 const libraryDir = getLibraryDir()
 if (!libraryDir) {
@@ -40,7 +41,7 @@ export const scaffoldPages = (ssConfig: ProjectConfig) => {
   const absComponentsPath = path.join(projectDir, `src/templates`)
   
   let elementalAreaPath: string
-  if (ssConfig.elemental.enabled) {
+  if (ssConfig.elemental) {
     const absElementalPath = path.resolve(absComponentsPath, `../components/elements`)
     fs.mkdirSync(absElementalPath, { recursive: true })
     const elementalPageSrc = fs.readFileSync(
@@ -76,7 +77,7 @@ export const scaffoldPages = (ssConfig: ProjectConfig) => {
     }
   })
 
-  const templateContents = ssConfig.elemental.enabled
+  const templateContents = ssConfig.elemental
     ? fs.readFileSync(absElementalPageTemplatePath, { encoding: `utf8` })
     : fs.readFileSync(absPageTemplatePath, { encoding: `utf8` })
 
@@ -124,6 +125,10 @@ export const scaffoldPages = (ssConfig: ProjectConfig) => {
       if (fs.existsSync(target)) {
         return
       }
+      const fields = getFragmentFields(result.fragment)
+      if (!fields) {
+        return
+      }
 
       const query = queryContents
         .replace(/<%queryName%>/g, queryName)
@@ -131,6 +136,8 @@ export const scaffoldPages = (ssConfig: ProjectConfig) => {
           /<%operationName%>/g,
           `${queryName.charAt(0).toUpperCase()}${queryName.slice(1)}`
         )
+        .replace(/<%selectedFields%>/g, fields)
+
       fs.writeFileSync(target, query)
       console.log(`Wrote new query for ${result.type}`)
     })

@@ -3,5 +3,6 @@
 query <%operationName%>($link: String!) {
   <%queryName%>(link: $link) {
     ...BasePageFields
+    <%selectedFields%>
   }
 }

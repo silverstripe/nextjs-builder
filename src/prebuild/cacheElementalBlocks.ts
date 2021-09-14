@@ -4,7 +4,7 @@ import { collectElementalBlocks } from "../build/collectors"
 import { ProjectConfig } from "@silverstripe/nextjs-toolkit"
 
 export default async (ssConfig: ProjectConfig): Promise<void> => {
-    if (!ssConfig.elemental.enabled) {
+    if (!ssConfig.elemental) {
         return Promise.resolve()
     }
     const dir = ssConfig.elemental.componentsPath ?? `components/elements`    
