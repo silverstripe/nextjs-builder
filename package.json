@@ -1,6 +1,6 @@
 {
   "name": "@silverstripe/nextjs-builder",
-  "version": "0.1.9",
+  "version": "0.1.10",
   "description": "Server-side for building NextJS websites powered by a Silverstripe CMS data source",
   "main": "index.js",
   "types": "lib-es5/index.d.ts",
@@ -27,32 +27,31 @@
     "@babel/parser": "^7.15.3",
     "@babel/traverse": "^7.15.4",
     "chalk": "^4.1.0",
+    "crypto-browserify": "^3.12.0",
     "dotenv": "^10.0.0",
     "file-system-cache": "^1.0.5",
+    "glob": "^7.1.7",
+    "gql-compress": "^2.0.24",
     "graphql": "^15.5.0",
     "html-react-parser": "^1.2.8",
     "node-fetch": "^2.6.1",
     "react": "^17.0.2",
-    "react-dom": "^17.0.2",
-    "gql-compress": "^2.0.24",
-    "glob": "^7.1.7",
-    "crypto-browserify": "^3.12.0"
+    "react-dom": "^17.0.2"
   },
   "peerDependencies": {
-    "next": "^11.0",
-    "@silverstripe/nextjs-toolkit": "*"    
+    "@silverstripe/nextjs-toolkit": "*",
+    "next": "^11.0"
   },
   "devDependencies": {
-    "@types/node-fetch": "^2.5.12",    
     "@types/glob": "^7.1.4",
     "@types/next": "^9.0.0",
     "@types/node": "^16.7.10",
+    "@types/node-fetch": "^2.5.12",
     "@types/react": "16.9.17",
     "@types/react-dom": "16.9.4",
     "eslint": "^7.12.0",
     "eslint-config-prettier": "^6.14.0",
     "eslint-config-sanity": "^1.150.8",
-
     "prettier": "^2.1.2",
     "typescript": "^4.2.3"
   }
