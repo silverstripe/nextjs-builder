@@ -3,6 +3,7 @@ import PageLayout from "layouts/PageLayout"
 import { PageProps } from "types"
 
 const Page: React.FC<PageProps> = ({ query: { <%queryName%> }}) => {
+    const queryResult = <%queryName%>
     return (
         <PageLayout page={<%queryName%>}>
             <h2><%templateName%></h2>

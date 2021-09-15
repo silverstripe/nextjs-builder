@@ -50,10 +50,12 @@ export const buildManifest = (ssConfig: ProjectConfig): Promise<void> => {
       })
     })
     .catch(e => {
-      console.error(`
+      throw new Error(`
 Error received while building the manifest:
 
 ${e.message}
+
+${e.stack}
 
 
         `)
