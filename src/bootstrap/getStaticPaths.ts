@@ -9,7 +9,7 @@ import { linkify } from "@silverstripe/nextjs-toolkit"
 import createClient from "../graphql/createClient"
 import { ProjectState } from "@silverstripe/nextjs-toolkit"
 
-export const getStaticPaths = (project: ProjectState): GetStaticPaths => async () => {
+export const getStaticPaths = (project: ProjectState): GetStaticPaths => async (context) => {
   const api = createClient(project.projectConfig)
   const staticPayloadResult: CoreQueries =
     (await api.query(STATIC_PAYLOAD_QUERY)) ?? null
@@ -29,7 +29,7 @@ export const getStaticPaths = (project: ProjectState): GetStaticPaths => async (
   // Warm the cache for future interrogations of link => type
   const typeResolutionResult: CoreQueries = await api.query(
     TYPE_RESOLUTION_QUERY,
-    { links: links.map(l => l.link) }
+    { links: links.map(l => l.link) },
   )
 
   const typeToLinks = new Map<string, Set<string>>()
@@ -93,7 +93,9 @@ export const getStaticPaths = (project: ProjectState): GetStaticPaths => async (
       const records = chunk[newQueryName]?.nodes ?? []
       records.forEach(record => {
         const link = linkify(record.link as string)
-        api.warm(singleQuery, { link }, record)
+        // Bulk queries don't apply to previews
+        const stage = `LIVE`
+        api.warm(singleQuery, { link, stage }, record)
       })
     }
   }

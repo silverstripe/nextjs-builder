@@ -10,11 +10,11 @@ import createGetQueryForType from "../build/createGetQueryForType"
 import createClient from "../graphql/createClient"
 import { ProjectState } from "@silverstripe/nextjs-toolkit"
 
-const getStaticProps = (project: ProjectState): GetStaticProps => async props => {
+const getStaticProps = (project: ProjectState): GetStaticProps => async context => {
   const getQueryForType = createGetQueryForType(project)
   const api = createClient(project.projectConfig)
   const { getPropsManifest, typeAncestry } = project.cacheManifest
-  const page = props?.params?.page ?? []
+  const page = context?.params?.page ?? []
   let url
   if (Array.isArray(page)) {
     url = page.join(`/`)
@@ -54,11 +54,10 @@ const getStaticProps = (project: ProjectState): GetStaticProps => async props =>
   const { type } = result
   // @ts-ignore
   const ancestors = typeAncestry[type] ?? []
-
+  const stage = context.preview ? `DRAFT` : `LIVE`
   const query = getQueryForType(type)
-
   if (query) {
-    data.query = (await api.query(query, { link: url })) ?? null
+    data.query = (await api.query(query, { link: url, stage })) ?? null
   }
 
   const propsKey = resolveAncestry(

@@ -59,7 +59,6 @@ const createClient = (projectConfig: ProjectConfig) => {
     }
 
     clientConfig.options.headers["Content-Type"] = `application/json`
-
     const options = {
       ...clientConfig.options,
       method: `POST`,

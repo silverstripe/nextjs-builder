@@ -1,7 +1,7 @@
 #import "../../fragments/BasePageFields.graphql"
 
-query <%operationName%>($link: String!) {
-  <%queryName%>(link: $link) {
+query <%operationName%>($link: String!, $stage: VersionedQueryMode) {
+  <%queryName%>(link: $link, versioning: { mode: $stage }) {
     ...BasePageFields
     <%selectedFields%>
   }
