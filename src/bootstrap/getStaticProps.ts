@@ -55,9 +55,11 @@ const getStaticProps = (project: ProjectState): GetStaticProps => async context 
   // @ts-ignore
   const ancestors = typeAncestry[type] ?? []
   const stage = context.preview ? `DRAFT` : `LIVE`
+  const method = context.preview ? `queryUncached` : `query`
   const query = getQueryForType(type)
   if (query) {
-    data.query = (await api.query(query, { link: url, stage })) ?? null
+    console.log(method)
+    data.query = (await api[method](query, { link: url, stage })) ?? null
   }
 
   const propsKey = resolveAncestry(
