@@ -94,8 +94,9 @@ API Key: `,
     },
     {
       name: "preview",
-      message: `You now need to add the following environment variable to your Silverstripe CMS installation:
+      message: (answers: any) => `You now need to add the following environment variables to your Silverstripe CMS installation:
 
+NEXTJS_BASE_URL='${answers.baseUrl}'
 NEXTJS_PREVIEW_KEY='${previewKey}'
 
     `,
