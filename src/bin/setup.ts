@@ -4,7 +4,7 @@
 import inquirer from "inquirer"
 import chalk from "chalk"
 import path from "path"
-import { writeFileSync, readFileSync } from "fs"
+import { writeFileSync } from "fs"
 // @ts-ignore
 import crypto from "crypto-browserify"
 import { ProjectConfig } from "@silverstripe/nextjs-toolkit"
@@ -94,9 +94,9 @@ API Key: `,
     },
     {
       name: "preview",
-      message: (answers: any) => `You now need to add the following environment variables to your Silverstripe CMS installation:
+      message: () => `You now need to add the following environment variables to your Silverstripe CMS installation:
 
-NEXTJS_BASE_URL='${answers.baseUrl}'
+NEXTJS_BASE_URL='http://localhost:3000'
 NEXTJS_PREVIEW_KEY='${previewKey}'
 
     `,
@@ -115,7 +115,6 @@ NEXTJS_PREVIEW_KEY='${previewKey}'
     .then(({ baseUrl, apiKey }: any) => {
       console.log("Writing env file...")
       const configFilePath = path.join(projectDir, ".env")
-      const codegenFilePath = path.join(projectDir, "codegen.yml")
       writeFileSync(
         configFilePath,
         `SILVERSTRIPE_BASE_URL = '${baseUrl}'
@@ -124,16 +123,6 @@ SILVERSTRIPE_PREVIEW_KEY = '${previewKey}'
 `
       )
       console.log(`Environment file ${chalk.yellow(configFilePath)} written`)
-      const codegenContents = readFileSync(codegenFilePath, {
-        encoding: `utf8`,
-      })
-      const newContents = codegenContents.replace(
-        `%SCHEMA_URL%`,
-        `${baseUrl}/graphql`
-      )
-      writeFileSync(codegenFilePath, newContents)
-
-      console.log("codegen.yml file updated")
 
       console.log(
         chalk.green(
