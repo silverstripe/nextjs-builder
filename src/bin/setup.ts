@@ -4,11 +4,12 @@
 import inquirer from "inquirer"
 import chalk from "chalk"
 import path from "path"
-import { writeFileSync } from "fs"
+import { writeFileSync, rmdirSync } from "fs"
+import { exec } from "child_process"
+
 // @ts-ignore
 import crypto from "crypto-browserify"
 import { ProjectConfig } from "@silverstripe/nextjs-toolkit"
-
 export const setup = (ssConfig: ProjectConfig) => {
   console.log(`
   This tool helps you get your NextJS project connected to a Silverstripe CMS 
@@ -123,6 +124,14 @@ SILVERSTRIPE_PREVIEW_KEY = '${previewKey}'
 `
       )
       console.log(`Environment file ${chalk.yellow(configFilePath)} written`)
+      rmdirSync(`${process.cwd()}/.git`, { recursive: true });
+      exec(`git init && git add . && git commit -m "Initial commit"`, (error) => {
+        if (error) {
+          console.warn(chalk.red(`Failed to create empty git repository`))
+        } else {
+          console.log(chalk.green(`Created empty git repository`))
+        }
+      })
 
       console.log(
         chalk.green(
