@@ -1,6 +1,6 @@
 {
   "name": "@silverstripe/nextjs-builder",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "Server-side for building NextJS websites powered by a Silverstripe CMS data source",
   "main": "index.js",
   "types": "lib-es5/index.d.ts",
