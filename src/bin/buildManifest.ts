@@ -33,7 +33,7 @@ export const buildManifest = (ssConfig: ProjectConfig): Promise<void> => {
     throw new Error(`Could not find project dir at ${__dirname}`)
   }
 
-  cache.init(path.join(projectDir, `.cache`))
+  cache.init(path.join(projectDir, `.ss-cache`))
   cache.clear()
   
   if (projectDir) {

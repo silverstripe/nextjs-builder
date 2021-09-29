@@ -4,7 +4,7 @@ import fs from "fs"
 import path from "path"
 import getProjectDir from "../utils/getProjectDir"
 
-let cacheDir = path.join(getProjectDir() ?? ``, `.cache`)
+let cacheDir = path.join(getProjectDir() ?? ``, `.ss-cache`)
 
 let inst = Cache({
     basePath: cacheDir,

@@ -57,6 +57,7 @@ const getStaticProps = (project: ProjectState): GetStaticProps => async context 
   const stage = context.preview ? `DRAFT` : `LIVE`
   const method = context.preview ? `queryUncached` : `query`
   const query = getQueryForType(type)
+  console.log(url)
   if (query) {
     data.query = (await api[method](query, { link: url, stage })) ?? null
   }
