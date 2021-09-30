@@ -2,20 +2,18 @@ import path from "path"
 import fs from "fs"
 
 const getProjectDir = (): string | null => {
-    let configFilePath
-    for (const p of module.paths) {
-      const candidate = path.join(path.dirname(p), `ss.config.ts`)
+    let dir = __dirname
+    while (dir !== `/`) {
+      const candidate = path.join(dir, `next.config.js`)
       if (fs.existsSync(candidate)) {
-        configFilePath = candidate
-        break
+        return dir
       }
-    }
-    if (!configFilePath) {
-      return null
+
+      dir = path.dirname(dir)
     }
 
-    return path.dirname(configFilePath)
-  
+    return null
+      
 }
 
 export default getProjectDir
