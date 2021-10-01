@@ -2,7 +2,7 @@ import { relative } from "path"
 import cache from "../cache/cache"
 import { collectElementalBlocks } from "../build/collectors"
 import { ProjectConfig } from "@silverstripe/nextjs-toolkit"
-import slash from "slash"
+import slash from "../utils/slash"
 
 export default async (ssConfig: ProjectConfig): Promise<void> => {
     if (!ssConfig.elemental) {
