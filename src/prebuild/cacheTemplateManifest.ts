@@ -1,6 +1,7 @@
 import { collectTemplates } from "../build/collectors"
 import { relative } from "path"
 import cache from "../cache/cache"
+import slash from "../utils/slash"
 import { ProjectConfig } from "@silverstripe/nextjs-toolkit"
 
 export default async (ssConfig: ProjectConfig): Promise<void> => {
@@ -10,7 +11,7 @@ export default async (ssConfig: ProjectConfig): Promise<void> => {
 
     for (const name in availableTemplates) {
         const absPath = availableTemplates[name]
-        const relPath = relative(cache.dir(), absPath)
+        const relPath = slash(relative(cache.dir(), absPath))
         output.push(
     `const ${name} = dynamic(() => import('${relPath}'))`     
         )
