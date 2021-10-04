@@ -9,6 +9,8 @@ import createGetQueryForType from "../build/createGetQueryForType"
 import createClient from "../graphql/createClient"
 import { ProjectState } from "@silverstripe/nextjs-toolkit"
 import { loadJSONFile } from "../cache/read"
+import glob from "glob"
+import getCacheDir from "../cache/getCacheDir"
 
 const getStaticProps = (project: ProjectState): GetStaticProps => async context => {
   const getQueryForType = createGetQueryForType(project)
@@ -32,7 +34,8 @@ const getStaticProps = (project: ProjectState): GetStaticProps => async context 
   }
   const availableTemplates = loadJSONFile(`.availableTemplates.json`)
   if (!availableTemplates) {
-    throw new Error(`Could not read .availableTemplates.json in cache directory`)
+    const files = glob.sync(`${getCacheDir()}/*.json`, { dot: true })
+    throw new Error(`Could not read .availableTemplates.json in cache directory: ${JSON.stringify(files)}`)
   }
 
   const templates = Object.keys(availableTemplates)
