@@ -3,11 +3,10 @@ import { CoreQueries } from "../../types"
 import { STATIC_PAYLOAD_QUERY, TYPE_RESOLUTION_QUERY } from "../build/queries"
 import createGetQueryForType from "../build/createGetQueryForType"
 import createBulkQuery from "../build/createBulkQuery"
-import { getQueryName, hasTopLevelField } from "@silverstripe/nextjs-toolkit"
 import { parse } from "graphql"
-import { linkify } from "@silverstripe/nextjs-toolkit"
+import { linkify, ProjectState, getQueryName, hasTopLevelField } from "@silverstripe/nextjs-toolkit"
 import createClient from "../graphql/createClient"
-import { ProjectState } from "@silverstripe/nextjs-toolkit"
+import warmQuery from "../graphql/warmQuery"
 
 export const getStaticPaths = (project: ProjectState): GetStaticPaths => async (context) => {
   const api = createClient(project.projectConfig)
@@ -37,7 +36,7 @@ export const getStaticPaths = (project: ProjectState): GetStaticPaths => async (
   const getQueryForType = createGetQueryForType(project)
 
   typeResolutionResult.typesForLinks.forEach(result => {
-    api.warm(
+    warmQuery(
       TYPE_RESOLUTION_QUERY,
       { links: [linkify(result.link)] },
       { typesForLinks: [{ link: result.link, type: result.type }] }
@@ -95,7 +94,7 @@ export const getStaticPaths = (project: ProjectState): GetStaticPaths => async (
         const link = linkify(record.link as string)
         // Bulk queries don't apply to previews
         const stage = `LIVE`
-        api.warm(singleQuery, { link, stage }, record)
+        warmQuery(singleQuery, { link, stage }, record)
       })
     }
   }

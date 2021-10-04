@@ -1,6 +1,8 @@
 export { default as getStaticPaths } from "./bootstrap/getStaticPaths"
 export { default as getStaticProps } from "./bootstrap/getStaticProps"
-export { default as cache } from "./cache/cache"
+export { default as readCache } from "./cache/read"
+export { default as writeCache } from "./cache/write"
+export { default as getCacheDir } from "./cache/getCacheDir"
 export { default as createClient } from "./graphql/createClient"
 
 export { default as cacheElementalBlocks } from "./prebuild/cacheElementalBlocks"

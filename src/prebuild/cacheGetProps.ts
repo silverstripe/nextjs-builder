@@ -1,6 +1,7 @@
 import { collectGetProps } from "../build/collectors"
 import { relative } from "path"
-import cache from "../cache/cache"
+import cache from "../cache/write"
+import getCacheDir from "../cache/getCacheDir"
 import { ProjectConfig } from "@silverstripe/nextjs-toolkit"
 
 export default async (ssConfig: ProjectConfig): Promise<void> => {
@@ -9,7 +10,7 @@ export default async (ssConfig: ProjectConfig): Promise<void> => {
 
     for (const name in availableFuncs) {
         const absPath = availableFuncs[name]
-        const relPath = relative(cache.dir(), absPath)
+        const relPath = relative(getCacheDir(), absPath)
         output.push(
     `import ${name} from "${relPath}"`
         )

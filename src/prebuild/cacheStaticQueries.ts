@@ -1,6 +1,6 @@
 import { getCacheKey, ProjectConfig } from "@silverstripe/nextjs-toolkit"
 import { extractStaticQueries } from "../staticQuery/staticQueryExtractor"
-import cache from "../cache/cache"
+import { writeJSONFile } from "../cache/write"
 import createClient from "../graphql/createClient"
 
 export default async (ssConfig: ProjectConfig): Promise<void> => {
@@ -26,6 +26,6 @@ export default async (ssConfig: ProjectConfig): Promise<void> => {
     })
     return Promise.all(promises)
         .then(() => {
-            cache.writeFile(`.staticQueries.json`, JSON.stringify(staticQueries))
+            writeJSONFile(`.staticQueries.json`, staticQueries)
         })
 }

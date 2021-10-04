@@ -1,4 +1,4 @@
-import cache from "../cache/cache"
+import { loadJSONFile } from "../cache/read"
 import {
   getCacheKey,
   getQueryName,
@@ -22,35 +22,17 @@ export interface Variables {
 }
 
 const createClient = (projectConfig: ProjectConfig) => {
-  const warm = (query: string, variables: Variables, result: unknown) => {
-    const key = getCacheKey(query, variables)
-    if (!key) {
-      return
-    }
-    cache.save(key, result)
-  }
 
   const query = async (query: string, variables: Variables = {}) => {
     const cacheKey = getCacheKey(query, variables)
     if (cacheKey) {
-      const cached = cache.load(cacheKey!)
-      if (cached) {
-        return cached
+      const cached = loadJSONFile(`.queryCache.json`) ?? {}
+      const existing = cached[cacheKey] ?? null
+      if (existing) {
+        return existing
       }
     }
 
-    const data = await queryUncached(query, variables)
-
-    if (cacheKey && data) {
-      cache.save(cacheKey, data)
-
-      return data
-    }
-
-    return null
-  }
-
-  const queryUncached = async (query: string, variables: Variables = {}) => {
     const clientConfig = projectConfig.client()
     if (!clientConfig.endpoint) {
       throw new Error(`
@@ -108,13 +90,15 @@ const createClient = (projectConfig: ProjectConfig) => {
     }
 
     return null
+
   }
 
-  const createChunkFetch = (query: string, variables: Variables = {}) => {
-    const doc = parse(query)
+
+  const createChunkFetch = (queryStr: string, variables: Variables = {}) => {
+    const doc = parse(queryStr)
     const queryName = getQueryName(doc)
     if (!queryName) {
-      throw new Error(`No query name found on ${query}`)
+      throw new Error(`No query name found on ${queryStr}`)
     }
     if (!hasPageInfoField(doc)) {
       throw new Error(
@@ -134,7 +118,7 @@ const createClient = (projectConfig: ProjectConfig) => {
         limit,
         offset,
       }
-      const result = await queryUncached(query, paginatedVariables)
+      const result = await query(queryStr, paginatedVariables)
       hasMore = result[queryName].pageInfo.hasNextPage
       offset += limit
 
@@ -145,9 +129,7 @@ const createClient = (projectConfig: ProjectConfig) => {
   }
 
   return {
-    warm,
     query,
-    queryUncached,
     createChunkFetch,
   }
 }

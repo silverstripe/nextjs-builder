@@ -3,7 +3,6 @@ import fs from "fs"
 import { ProjectConfig } from "@silverstripe/nextjs-toolkit"
 import { transpileModule } from "typescript"
 import dotenv from "dotenv"
-import cache from "../cache/cache"
 import getProjectDir from "./getProjectDir"
 
 
@@ -23,9 +22,6 @@ const bootProjectConfig = (): ProjectConfig => {
 
   const envPath = path.join(projectDir, `.env`)
   dotenv.config({ path: envPath })
-
-  const cachePath = path.join(projectDir, `.ss-cache`)
-  cache.init(cachePath)
 
   const ssConfig = eval(jsSource.outputText)
   ssConfig.baseDir = projectDir

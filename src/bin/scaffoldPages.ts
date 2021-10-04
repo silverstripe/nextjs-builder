@@ -84,7 +84,7 @@ export const scaffoldPages = (ssConfig: ProjectConfig) => {
   const queryContents = fs.readFileSync(absQueryPath, { encoding: `utf8` })
 
   const api = createClient(ssConfig)
-  api.queryUncached(query, variables).then(result => {
+  api.query(query, variables).then(result => {
     result.generateFragments.forEach((result: FragmentResult) => {
       if (ignore.includes(result.type)) {
         return

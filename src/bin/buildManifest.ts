@@ -12,7 +12,7 @@ import createCacheManifest from "../prebuild/createCacheManifest"
 import { glob } from "glob"
 import getProjectDir from "../utils/getProjectDir"
 import path from "path"
-import cache from "../cache/cache"
+import cache from "../cache/write"
 
 export const buildManifest = (ssConfig: ProjectConfig): Promise<void> => {
 
@@ -33,7 +33,6 @@ export const buildManifest = (ssConfig: ProjectConfig): Promise<void> => {
     throw new Error(`Could not find project dir at ${__dirname}`)
   }
 
-  cache.init(path.join(projectDir, `.ss-cache`))
   cache.clear()
   
   if (projectDir) {

@@ -1,6 +1,7 @@
 import { collectTemplates } from "../build/collectors"
 import { relative } from "path"
-import cache from "../cache/cache"
+import { writeFile, writeJSONFile } from "../cache/write"
+import getCacheDir from "../cache/getCacheDir"
 import slash from "../utils/slash"
 import { ProjectConfig } from "@silverstripe/nextjs-toolkit"
 
@@ -11,7 +12,7 @@ export default async (ssConfig: ProjectConfig): Promise<void> => {
 
     for (const name in availableTemplates) {
         const absPath = availableTemplates[name]
-        const relPath = slash(relative(cache.dir(), absPath))
+        const relPath = slash(relative(getCacheDir(), absPath))
         output.push(
     `const ${name} = dynamic(() => import('${relPath}'))`     
         )
@@ -22,7 +23,8 @@ export default async (ssConfig: ProjectConfig): Promise<void> => {
         ${Object.keys(availableTemplates).join(",\n\t")}    
     }
     `)
-    cache.writeFile(`.templateManifest.js`, output.join("\n"))
+    writeFile(`.templateManifest.js`, output.join("\n"))
+    writeJSONFile(`.availableTemplates.json`, availableTemplates)
 
     return Promise.resolve()
 }

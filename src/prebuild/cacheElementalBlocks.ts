@@ -1,5 +1,6 @@
 import { relative } from "path"
-import cache from "../cache/cache"
+import cache from "../cache/write"
+import getCacheDir from "../cache/getCacheDir"
 import { collectElementalBlocks } from "../build/collectors"
 import { ProjectConfig } from "@silverstripe/nextjs-toolkit"
 import slash from "../utils/slash"
@@ -15,7 +16,7 @@ export default async (ssConfig: ProjectConfig): Promise<void> => {
 
     for (const name in availableBlocks) {
         const absPath = availableBlocks[name]
-        const relPath = slash(relative(cache.dir(), absPath))
+        const relPath = slash(relative(getCacheDir(), absPath))
         output.push(
     `const ${name} = dynamic(() => import('${relPath}'))`     
         )

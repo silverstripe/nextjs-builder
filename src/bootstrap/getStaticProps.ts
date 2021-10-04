@@ -1,6 +1,5 @@
 import { GetStaticProps } from "next"
 import { CoreQueries } from "../../types"
-import { collectTemplates } from "../build/collectors"
 import {
   resolveAncestry,
   linkify,
@@ -9,6 +8,7 @@ import { TYPE_RESOLUTION_QUERY } from "../build/queries"
 import createGetQueryForType from "../build/createGetQueryForType"
 import createClient from "../graphql/createClient"
 import { ProjectState } from "@silverstripe/nextjs-toolkit"
+import { loadJSONFile } from "../cache/read"
 
 const getStaticProps = (project: ProjectState): GetStaticProps => async context => {
   const getQueryForType = createGetQueryForType(project)
@@ -30,7 +30,12 @@ const getStaticProps = (project: ProjectState): GetStaticProps => async context 
       notFound: true,
     }
   }
-  const templates = Object.keys(collectTemplates(project.projectConfig.baseDir))
+  const availableTemplates = loadJSONFile(`.availableTemplates.json`)
+  if (!availableTemplates) {
+    throw new Error(`Could not read .availableTemplates.json in cache directory`)
+  }
+
+  const templates = Object.keys(availableTemplates)
   const typeResolutionResult: CoreQueries = await api.query(
     TYPE_RESOLUTION_QUERY,
     { links: [url] }
@@ -55,10 +60,9 @@ const getStaticProps = (project: ProjectState): GetStaticProps => async context 
   // @ts-ignore
   const ancestors = typeAncestry[type] ?? []
   const stage = context.preview ? `DRAFT` : `LIVE`
-  const method = context.preview ? `queryUncached` : `query`
-  const query = getQueryForType(type)
-  if (query) {
-    data.query = (await api[method](query, { link: url, stage })) ?? null
+  const queryStr = getQueryForType(type)
+  if (queryStr) {
+    data.query = (await api.query(queryStr, { link: url, stage })) ?? null
   }
 
   const propsKey = resolveAncestry(

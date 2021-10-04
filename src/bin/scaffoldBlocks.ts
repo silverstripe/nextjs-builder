@@ -71,7 +71,7 @@ export const scaffoldBlocks = (ssConfig: ProjectConfig) => {
 
   const api = createClient(ssConfig)
 
-  api.queryUncached(query, variables).then(result => {
+  api.query(query, variables).then(result => {
     const baseElement = result.generateFragments.filter(
       (r: FragmentResult) => r.type === `BaseElement`
     )

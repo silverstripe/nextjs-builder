@@ -1,6 +1,5 @@
 // @ts-ignore
 import glob from "glob"
-import cache from "../cache/cache"
 import path from "path"
 
 // Remove once we figure out how to include types.d.ts in the prebuild
@@ -25,10 +24,6 @@ export const createName = (absPath: string): string => {
 
 export const collectTemplates = (baseDir: string): StringMap => {
     const pattern = path.join(baseDir, `src/templates/**/*.{js,jsx,ts,tsx}`)
-    const existing = cache.loadJSON(pattern)
-    if (existing) {
-        return existing
-    }
     const nameToPath: StringMap = {}
     
     const result = glob.sync(pattern, { absolute: true });
@@ -40,7 +35,6 @@ export const collectTemplates = (baseDir: string): StringMap => {
             nameToPath[createName(absPath)] = absPath
         })
 
-    cache.saveJSON(pattern, nameToPath)
     
     return nameToPath
 };
@@ -48,12 +42,6 @@ export const collectTemplates = (baseDir: string): StringMap => {
 
 export const collectQueries = (baseDir: string): StringMap => {
     const pattern = path.join(baseDir, `src/**/*.graphql`)
-
-    const existing = cache.loadJSON(pattern)
-    
-    if (existing) {
-        return existing
-    }
 
     const nameToPath: StringMap = {}
     const result = glob.sync(pattern, { absolute: true });
@@ -65,8 +53,6 @@ export const collectQueries = (baseDir: string): StringMap => {
         }
     }
 
-    cache.saveJSON(pattern, nameToPath)
-
     return nameToPath
 };
 
@@ -77,13 +63,6 @@ export const collectGetProps = (baseDir: string): StringMap => {
         path.join(baseDir, `src/**/props.{js,ts}`),
     ]
     
-    const key = JSON.stringify(patterns)
-    const existing = cache.loadJSON(key)
-    
-    if (existing) {
-        return existing
-    }
-
     const nameToPath: StringMap = {}
     let results: Array<string> = [];
     patterns.forEach(pattern => {
@@ -99,26 +78,18 @@ export const collectGetProps = (baseDir: string): StringMap => {
         }
     }
 
-    cache.saveJSON(key, nameToPath)
-
     return nameToPath
 };
 
 
 export const collectElementalBlocks = (baseDir: string, elementalDir: string): StringMap => {
     const pattern = path.join(baseDir, `src/${elementalDir}/**/*.{js,jsx,ts,tsx}`)
-    const existing = cache.loadJSON(pattern)
-    if (existing) {
-        return existing
-    }
     const nameToPath: StringMap = {}
     
     const result = glob.sync(pattern, { absolute: true });
     result.forEach((absPath: string) => {
         nameToPath[createName(absPath)] = absPath
     })
-
-    cache.saveJSON(pattern, nameToPath)
 
     return nameToPath
 };

@@ -1,5 +1,5 @@
 import { ProjectConfig } from "@silverstripe/nextjs-toolkit"
-import cache from "../cache/cache"
+import { writeJSONFile } from "../cache/write"
 import createClient from "../graphql/createClient"
 
 export default async (ssConfig: ProjectConfig): Promise<void> => {
@@ -21,7 +21,7 @@ export default async (ssConfig: ProjectConfig): Promise<void> => {
             typeAncestry.forEach((result: { type: string, ancestry: Array<string> }) => {
                 ancestryMap[result.type] = result.ancestry
             })  
-            cache.writeFile(`.typeAncestry.json`, JSON.stringify(ancestryMap))
+            writeJSONFile(`.typeAncestry.json`, ancestryMap)
 
         })
 }
