@@ -4,7 +4,7 @@ import { STATIC_PAYLOAD_QUERY, TYPE_RESOLUTION_QUERY } from "../build/queries"
 import createGetQueryForType from "../build/createGetQueryForType"
 import createBulkQuery from "../build/createBulkQuery"
 import { parse } from "graphql"
-import { linkify, ProjectState, getQueryName, hasTopLevelField } from "@silverstripe/nextjs-toolkit"
+import { linkify, ProjectState, getQueryName, hasTopLevelField, getQueryNodes } from "@silverstripe/nextjs-toolkit"
 import createClient from "../graphql/createClient"
 import warmQuery from "../graphql/warmQuery"
 
@@ -64,11 +64,22 @@ export const getStaticPaths = (project: ProjectState): GetStaticPaths => async (
       continue
     }
     const doc = parse(singleQuery)
+    const queries = getQueryNodes(doc)
+
+    if (queries.length > 1) {
+      console.warn(
+        `Query has multiple query fields: ${queries.join(', ')}
+                and is ineligible for bulk fetching.`
+      )
+      continue
+
+    }
+    
+    const singleQueryName = getQueryName(doc)
+
     if (!hasTopLevelField(doc, `link`)) {
       console.warn(
-        `Query ${getQueryName(
-          doc
-        )} does not have a link field in its selection set
+        `Query ${singleQueryName} ${singleQuery} does not have a link field in its selection set
                 and is ineligible for bulk fetching.`
       )
       continue
@@ -94,7 +105,10 @@ export const getStaticPaths = (project: ProjectState): GetStaticPaths => async (
         const link = linkify(record.link as string)
         // Bulk queries don't apply to previews
         const stage = `LIVE`
-        warmQuery(singleQuery, { link, stage }, record)
+        const queryResult = {
+          [singleQueryName!]: record
+        }
+        warmQuery(singleQuery, { link, stage }, queryResult)
       })
     }
   }

@@ -73,7 +73,6 @@ const getStaticProps = (project: ProjectState): GetStaticProps => async context 
   if (propsFunc) {
     data.extraProps = await propsFunc(data.query)
   }
-
   const componentProps = {
     props: {
       data,
